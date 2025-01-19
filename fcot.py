@@ -43,6 +43,8 @@ if __name__ == '__main__':
     while True:
         final1 = pregao_inst(papel1)
         final2 = pregao_inst(papel2)
+        print(final1)
+        print(final2)
 
         # Cálculos taxa
         taxa_inst = taxa(final1, final2)
