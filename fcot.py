@@ -28,7 +28,7 @@ def taxa(valor1, valor2):
     # Encontra a taxa entre os dois valores de cotação
     # Float values
     output = valor1/valor2 if valor1>=valor2 else valor2/valor1
-    return output
+    return float(output)
 
 if __name__ == '__main__':
     # Input do nome do ativo
