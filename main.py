@@ -32,6 +32,9 @@ def janela_config():
     return sg.Window('Configurações',layout, finalize=True)
 
 janela1, janela2 = janela_main(), None
+running = False
+start_time = None
+meta = False
 
 while True:
     window, event, values = sg.read_all_windows()
@@ -56,10 +59,16 @@ while True:
     
     # COMANDOS JANELA MAIN
     if window == janela1 and event == 'start':
-        while True:
-            if event == 'cancel_main':
-                sg.popup('Processo cancelado com sucesso')
-                break
+        running = True
+        start_time = time.time()
+    
+    if window == janela1 and event == 'cancel_main':
+        running = False
+
+    # A cada 60 segundos o cálculo é realizado
+    if running:
+        inst_time = time.time()
+        if inst_time - start_time >= 60:
             taxa_inicial = cot.taxa(cot.virgula(values['valor1']), cot.virgula(values['valor2']))
             taxa_inst = cot.taxa(cot.pregao_inst(values['papel1']), cot.pregao_inst(values['papel2']))
             # Condicional de parada
