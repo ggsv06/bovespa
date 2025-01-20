@@ -3,7 +3,13 @@ import fcot as cot
 import fsav as sav
 import fmsg as mil
 import time
+import sys
+import os
 
+if getattr(sys, 'frozen', False):  # If running as a compiled .exe
+    icon_path = os.path.join(sys._MEIPASS, 'img.ico')
+else:  # If running as a .py file
+    icon_path = 'img.ico'
 
 def janela_main():
     WIN_W = 30
@@ -18,7 +24,7 @@ def janela_main():
         [sg.Text('')],
         [sg.Button('Configurações', key='config'), sg.Button('Limpar', key='cls'), sg.Button('Salvar', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
-    return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon='img.ico')
+    return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
 
 def janela_config():
     WIN_W = 25
@@ -30,7 +36,7 @@ def janela_config():
         [sg.Text('')],
         [sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
-    return sg.Window('Configurações',layout, finalize=True, icon='img.ico')
+    return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
 
 janela1, janela2 = janela_main(), None
 running = False
@@ -74,7 +80,7 @@ while True:
     if window == janela2 and event == 'save_config':
         result = sav.create_json_config(values['email'], values['token'])
         if result == False:
-            sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.')
+            sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         janela2.hide()
     
     # COMANDOS JANELA MAIN
@@ -132,10 +138,10 @@ while True:
                     janela1['output'].update('Nenhum email encontrado\n', append=True)
                     pass
                 else:
-                    mil.enviar_email(dic_conf['token'], dic_conf['email'], taxa_inst - taxa_inicial)
+                    mil.enviar_email(dic_conf['token'], dic_conf['email'], taxa_inst - taxa_inicial, nome1, nome2)
             except Exception as e:
                 janela1['output'].update('Email não pode ser enviado.\n')
-            sg.popup('Meta Atingida com sucesso!')
+            sg.popup('Meta Atingida com sucesso!', icon=icon_path)
     
     # BOTÃO SALVAR DADOS DO MENU
     if window == janela1 and event == 'save_main':
