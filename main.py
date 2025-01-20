@@ -10,9 +10,9 @@ def janela_main():
     WIN_H = 50
     sg.theme('GrayGrayGray')
     layout_main = [
-        [sg.Text('Nomes dos papéis '), sg.InputText(key='nome1', size=(int(WIN_W/2),1)), sg.InputText(key='nome2', size=(int(WIN_W/2),1))],
-        [sg.Text('Valores de compra '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
-        [sg.Text('Aumentar a taxa %'), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
+        [sg.Text('Ativo Bovespa'), sg.InputText(key='nome1', size=(int(WIN_W/2),1)), sg.InputText(key='nome2', size=(int(WIN_W/2),1))],
+        [sg.Text('Preços          '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
+        [sg.Text('Meta %         '), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
         [sg.Push(), sg.Text('Desativado', key='status'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
         [sg.Text('')],
@@ -119,7 +119,6 @@ while True:
                 pass
             start_time = time.time()
         if meta:
-            sg.popup('Meta Atingida com sucesso!')
             meta = False
             running = False
             janela1['cancel_main'].update(button_color=('white', 'gray'))
@@ -136,6 +135,7 @@ while True:
                     mil.enviar_email(dic_conf['token'], dic_conf['email'], taxa_inst - taxa_inicial)
             except Exception as e:
                 janela1['output'].update('Email não pode ser enviado.\n')
+            sg.popup('Meta Atingida com sucesso!')
     
     # BOTÃO SALVAR DADOS DO MENU
     if window == janela1 and event == 'save_main':

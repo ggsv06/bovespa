@@ -1,6 +1,7 @@
 import requests as rq
 from bs4 import BeautifulSoup as bs
 import time
+import random
 
 # Funções
 def virgula(temp_str):
@@ -17,6 +18,7 @@ def pregao_inst(papel):
     headers = {'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36'}
     # Links dos sites contento o preço
     link = f'https://statusinvest.com.br/acoes/{papel}'
+    timestamp = int(time.time()) + random.randint(1, 1000)
     # Requests do conteúdo em html dos sites
     req = rq.get(link, headers=headers)
     # Tratamento do conteúdo do site
