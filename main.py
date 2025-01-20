@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
 import fcot as cot
+import fsav as sav
+import fmsg as mil
 import time
 
 
@@ -8,35 +10,42 @@ def janela_main():
     WIN_H = 50
     sg.theme('GrayGrayGray')
     layout_main = [
-        [sg.Text('Nomes dos papéis '), sg.InputText(key='papel1', size=(int(WIN_W/2),1)), sg.InputText(key='papel2', size=(int(WIN_W/2),1))],
+        [sg.Text('Nomes dos papéis '), sg.InputText(key='nome1', size=(int(WIN_W/2),1)), sg.InputText(key='nome2', size=(int(WIN_W/2),1))],
         [sg.Text('Valores de compra '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
         [sg.Text('Aumentar a taxa %'), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
         [sg.Push(), sg.Text('Desativado', key='status'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
-        [sg.Text(key='1 papel atualizado em ')],
-        [sg.Text(key='2 papel atualizado em ')],
-        [sg.Text(key='Taxa atualizada em ')],
-        [sg.Text(key='Última atualização')],
-        [sg.Button('Configurações', key='config', button_color=('white', 'black')), sg.Button('Limpar', key='cls'), sg.Button('Salvar', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
+        [sg.Text('')],
+        [sg.Button('Configurações', key='config'), sg.Button('Limpar', key='cls'), sg.Button('Salvar', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
-    return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True)
+    return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon='img.ico')
 
 def janela_config():
     WIN_W = 25
     WIN_H = 20
     sg.theme('GrayGrayGray')
     layout = [
-        [sg.Text('email'), sg.InputText(size=(int(WIN_W),1))],
-        [sg.Text('Token'), sg.InputText(size=(int(WIN_W),1))],
-        [sg.Checkbox('Iniciar ao inicializar a máquina', key='inicializar')],
-        [sg.Button('Cancelar', key='cancel_config'), sg.Button('Salvar', key='save_config')]
+        [sg.Text('Email'), sg.InputText(key='email',size=(int(WIN_W),1))],
+        [sg.Text('Token'), sg.InputText(key='token',size=(int(WIN_W),1))],
+        [sg.Text('')],
+        [sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
-    return sg.Window('Configurações',layout, finalize=True)
+    return sg.Window('Configurações',layout, finalize=True, icon='img.ico')
 
 janela1, janela2 = janela_main(), None
 running = False
 start_time = None
 meta = False
+
+dic = sav.read_json('menu')
+if dic == False:
+    pass
+else:
+    try:
+        for i in ['nome1', 'nome2', 'valor1', 'valor2', 'taxa']:
+            janela1[i].update(dic[i])
+    except:
+        pass
 
 while True:
     window, event, values = sg.read_all_windows(timeout=1000)
@@ -48,15 +57,24 @@ while True:
     # BOTÃO CONFIGURAÇÕES
     if window == janela1 and event == 'config':
         janela2 = janela_config()
+        # Auto preenchimento
+        dic = sav.read_json('config')
+        if dic == False:
+            pass
+        else:
+            try:
+                janela2['email'].update(dic['email'])
+                janela2['token'].update(dic['token'])
+            except:
+                pass
     # BOTÃO PÁGINA CONFIG CANCELAR
     if window == janela2 and event == 'cancel_config':
         janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
-        # Construir lógica de save das informações
-        if values['inicializar'] == True:
-            sg.popup('teste')
-            # Construir lógica de save das informações
+        result = sav.create_json_config(values['email'], values['token'])
+        if result == False:
+            sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.')
         janela2.hide()
     
     # COMANDOS JANELA MAIN
@@ -64,11 +82,11 @@ while True:
         try:
             valor1 = cot.virgula(values['valor1'])
             valor2 = cot.virgula(values['valor2'])
-            papel1 = cot.pregao_inst(values['papel1'])
-            papel2 = cot.pregao_inst(values['papel2'])
+            papel1 = cot.pregao_inst(values['nome1'])
+            papel2 = cot.pregao_inst(values['nome2'])
             taxa = cot.virgula(values['taxa'])*0.01
-            nome1 = values['papel1']
-            nome2 = values['papel2']
+            nome1 = values['nome1']
+            nome2 = values['nome2']
             janela1['status'].update('Ativado')
             janela1['cancel_main'].update(button_color=('white', 'red'))
             janela1['start'].update(button_color=('white', 'grey'))
@@ -78,6 +96,7 @@ while True:
         except:
             janela1['output'].update('Digite valores válidos\n', append=True)
     
+    # BOTÃO CANCELAR OPERAÇÃO
     if window == janela1 and event == 'cancel_main':
         running = False
         janela1['cancel_main'].update(button_color=('white', 'grey'))
@@ -87,7 +106,7 @@ while True:
     # A cada 60 segundos o cálculo é realizado
     if running:
         inst_time = time.time()
-        if inst_time - start_time >= 10:
+        if inst_time - start_time >= 2:
             taxa_inicial = cot.taxa(valor1, valor2)
             taxa_inst = cot.taxa(papel1, papel2)
             janela1['output'].update(f"\n{time.strftime('%d/%m/%Y %H:%M:%S')}", append=True)
@@ -108,10 +127,29 @@ while True:
             janela1['status'].update('Desativado')
             janela1['output'].update('Meta atingida com sucesso!\n', append=True)
 
-
-    try:
-        print(inst_time - start_time)
-    except:
-        print('erro')
-
+            dic_conf = sav.read_json('config')
+            try:
+                if dic_conf == False:
+                    janela1['output'].update('Nenhum email encontrado\n', append=True)
+                    pass
+                else:
+                    mil.enviar_email(dic_conf['token'], dic_conf['email'], taxa_inst - taxa_inicial)
+            except Exception as e:
+                janela1['output'].update('Email não pode ser enviado.\n')
     
+    # BOTÃO SALVAR DADOS DO MENU
+    if window == janela1 and event == 'save_main':
+        result = sav.create_json_menu(values['nome1'], values['nome2'], values['valor1'], values['valor2'], values['taxa'])
+        if result == True:
+            janela1['output'].update('Dados salvos com sucesso!\n', append=True)
+        else:
+            janela1['output'].update('Ocorreu um erro, verifique se os dados estão corretos.\n', append=True)
+
+    # BOTÃO LIMPAR DADOS DO MENU
+    if window == janela1 and event == 'cls':
+        result = sav.create_json_menu('', '', '', '', '')
+        if result == True:
+            for i in ['nome1', 'nome2', 'valor1', 'valor2', 'taxa']:
+                janela1[i].update('')
+    
+        

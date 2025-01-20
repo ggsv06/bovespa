@@ -1,51 +1,71 @@
+import json
+import os
 import PySimpleGUI as sg
-import time
-import threading
 
-# Function to perform calculations
-def calculate():
-    # Replace this with your actual calculations
-    result = "Calculation done at " + time.strftime("%H:%M:%S")
-    return result
+# Get the AppData folder path
+appdata_path = os.getenv("APPDATA")
+if not appdata_path:
+    sg.popup_error("AppData folder not found!")
+    exit()
 
-# Main GUI
-def main():
-    sg.theme('Default')
+# Define the file path in AppData
+file_path = os.path.join(appdata_path, "user_data_list.json")
 
-    layout = [
-        [sg.Text("Status: ", size=(15, 1)), sg.Text("Stopped", key="-STATUS-", size=(20, 1))],
-        [sg.Multiline(size=(50, 10), key="-OUTPUT-", disabled=True, autoscroll=True)],
-        [sg.Button("Start", key="-START-"), sg.Button("Cancel", key="-CANCEL-"), sg.Button("Exit")]
-    ]
+# Load existing data from the JSON file
+if os.path.exists(file_path):
+    with open(file_path, "r") as json_file:
+        data_list = json.load(json_file)
+else:
+    data_list = []
 
-    window = sg.Window("Periodic Calculation", layout)
-    running = False
-    start_time = None
+# Layout for the GUI
+layout = [
+    [sg.Text("Name:"), sg.InputText(key="name")],
+    [sg.Text("Age:"), sg.InputText(key="age")],
+    [sg.Text("Email:"), sg.InputText(key="email")],
+    [sg.Text("Country:"), sg.InputText(key="country")],
+    [sg.Button("Add"), sg.Button("Save"), sg.Button("Cancel")],
+    [sg.Multiline(size=(50, 10), key="output", disabled=True, autoscroll=True)]
+]
 
-    while True:
-        event, values = window.read(timeout=1000)  # Check events every second
+# Create the window
+window = sg.Window("JSON File with List of Dictionaries", layout)
 
-        if event == sg.WIN_CLOSED or event == "Exit":
-            break
+while True:
+    event, values = window.read()
+    if event == sg.WINDOW_CLOSED or event == "Cancel":
+        break
+    elif event == "Add":
+        # Validate and add the new data to the list
+        name, age, email, country = values["name"], values["age"], values["email"], values["country"]
 
-        if event == "-START-":
-            running = True
-            start_time = time.time()  # Record the current time
-            window["-STATUS-"].update("Running")
+        if not all([name, age, email, country]):
+            sg.popup_error("All fields must be filled!")
+        else:
+            try:
+                # Add the new dictionary to the list
+                new_entry = {"name": name, "age": age, "email": email, "country": country}
+                data_list.append(new_entry)
 
-        if event == "-CANCEL-":
-            running = False
-            window["-STATUS-"].update("Stopped")
+                # Update the output field to show the added entry
+                window["output"].update(f"Added: {new_entry}\n", append=True)
 
-        if running:
-            current_time = time.time()
-            if current_time - start_time >= 5:  # Check if 60 seconds have passed
-                result = calculate()
-                window["-OUTPUT-"].update(f"{result}\n", append=True)
-                start_time = current_time  # Reset the timer
+                # Clear the input fields
+                window["name"].update("")
+                window["age"].update("")
+                window["email"].update("")
+                window["country"].update("")
+            except Exception as e:
+                sg.popup_error(f"An error occurred: {e}")
 
-    window.close()
+    elif event == "Save":
+        # Save the updated list to the JSON file
+        try:
+            with open(file_path, "w") as json_file:
+                json.dump(data_list, json_file, indent=4)
 
+            sg.popup(f"Data saved to {file_path} successfully!")
+        except Exception as e:
+            sg.popup_error(f"An error occurred: {e}")
 
-if __name__ == "__main__":
-    main()
+window.close()
