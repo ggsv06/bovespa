@@ -6,7 +6,6 @@ def enviar_email(key, mail, taxa):
     <p>A taxa de {taxa}% foi atingida!</p>
     <p>Obrigado por utilizar este software de Gian Gabriel</p>
     """
-# Tag 'yjtlexulptslkbrn'
     msg = email.message.Message()
     msg['Subject'] = "ALERTA! A TAXA FOI ATINGIDA"
     msg['From'] = mail
