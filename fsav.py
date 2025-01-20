@@ -1,7 +1,7 @@
 import json
 import os
 
-def create_json_config(email, token):
+def create_json_config(email, remetente, token):
     # Path do arquivo
     appdata_path = os.getenv('APPDATA')
     file_path = os.path.join(appdata_path, 'bov_data.json')
@@ -17,6 +17,7 @@ def create_json_config(email, token):
     try:
         data = {
             'email': email,
+            'remetente': remetente,
             'token': token,
         }
         data_dic['config'] = data

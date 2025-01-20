@@ -1,7 +1,7 @@
 import smtplib
 import email.message
 
-def enviar_email(key, mail, taxa, nome1, nome2):  
+def enviar_email(key, remetente, destinatario, taxa, nome1, nome2):  
     corpo_email = f"""
     <p>A meta de {round(taxa,2)}% foi atingida!</p>
     <p>{nome1.upper()} e {nome2.upper()}</p>
@@ -10,8 +10,8 @@ def enviar_email(key, mail, taxa, nome1, nome2):
     """
     msg = email.message.Message()
     msg['Subject'] = "🚨 ALERTA! A TAXA FOI ATINGIDA 🚨"
-    msg['From'] = mail
-    msg['To'] = mail
+    msg['From'] = remetente
+    msg['To'] = destinatario
     password = key 
     msg.add_header('Content-Type', 'text/html')
     msg.set_payload(corpo_email )

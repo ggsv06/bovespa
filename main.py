@@ -31,8 +31,9 @@ def janela_config():
     WIN_H = 20
     sg.theme('GrayGrayGray')
     layout = [
-        [sg.Text('Email'), sg.InputText(key='email',size=(int(WIN_W),1))],
-        [sg.Text('Token'), sg.InputText(key='token',size=(int(WIN_W),1))],
+        [sg.Text('Email destinatário'), sg.InputText(key='email',size=(int(WIN_W),1))],
+        [sg.Text('Email remetente  '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
+        [sg.Text('Senha remetente '), sg.InputText(key='token',size=(int(WIN_W),1))],
         [sg.Text('')],
         [sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
@@ -70,6 +71,7 @@ while True:
         else:
             try:
                 janela2['email'].update(dic['email'])
+                janela2['remetente'].update(dic['remetente'])
                 janela2['token'].update(dic['token'])
             except:
                 pass
@@ -78,7 +80,7 @@ while True:
         janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
-        result = sav.create_json_config(values['email'], values['token'])
+        result = sav.create_json_config(values['email'], values['remetente'], values['token'])
         if result == False:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         janela2.hide()
@@ -138,7 +140,7 @@ while True:
                     janela1['output'].update('Nenhum email encontrado\n', append=True)
                     pass
                 else:
-                    mil.enviar_email(dic_conf['token'], dic_conf['email'], taxa_inst - taxa_inicial, nome1, nome2)
+                    mil.enviar_email(dic_conf['token'], dic_conf['remetente'], dic_conf['email'], taxa_inst - taxa_inicial, nome1, nome2)
             except Exception as e:
                 janela1['output'].update('Email não pode ser enviado.\n')
             sg.popup('Meta Atingida com sucesso!', icon=icon_path)
