@@ -91,8 +91,8 @@ while True:
             papel1 = cot.pregao_inst(values['nome1'])
             papel2 = cot.pregao_inst(values['nome2'])
             taxa = cot.virgula(values['taxa'])*0.01
-            nome1 = values['nome1']
-            nome2 = values['nome2']
+            nome1 = values['nome1'].upper()
+            nome2 = values['nome2'].upper()
             janela1['status'].update('Ativado')
             janela1['cancel_main'].update(button_color=('white', 'red'))
             janela1['start'].update(button_color=('white', 'grey'))
