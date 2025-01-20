@@ -88,8 +88,6 @@ while True:
         try:
             valor1 = cot.virgula(values['valor1'])
             valor2 = cot.virgula(values['valor2'])
-            papel1 = cot.pregao_inst(values['nome1'])
-            papel2 = cot.pregao_inst(values['nome2'])
             taxa = cot.virgula(values['taxa'])*0.01
             nome1 = values['nome1'].upper()
             nome2 = values['nome2'].upper()
@@ -113,6 +111,8 @@ while True:
     if running:
         inst_time = time.time()
         if inst_time - start_time >= 2:
+            papel1 = cot.pregao_inst(nome1)
+            papel2 = cot.pregao_inst(nome2)
             taxa_inicial = cot.taxa(valor1, valor2)
             taxa_inst = cot.taxa(papel1, papel2)
             janela1['output'].update(f"\n{time.strftime('%d/%m/%Y %H:%M:%S')}", append=True)
