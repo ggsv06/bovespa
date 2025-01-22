@@ -147,7 +147,7 @@ while True:
                     janela1['output'].update('Nenhum email encontrado\n', append=True)
                     pass
                 else:
-                    mil.enviar_email(dic_conf['token'], dic_conf['remetente'], dic_conf['email'], taxa_inst - taxa_inicial, nome1, nome2)
+                    mil.enviar_email(dic_conf['token'], dic_conf['remetente'], dic_conf['email'], taxa, nome1, nome2)
             except Exception as e:
                 janela1['output'].update('Email não pode ser enviado.\n')
             sg.popup('Meta Atingida com sucesso!', icon=icon_path)

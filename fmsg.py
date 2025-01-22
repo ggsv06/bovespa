@@ -3,7 +3,7 @@ import email.message
 
 def enviar_email(key, remetente, destinatario, taxa, nome1, nome2):  
     corpo_email = f"""
-    <p>A meta de {round(taxa,2)}% foi atingida!</p>
+    <p>A meta de {taxa:.2%} foi atingida!</p>
     <p>{nome1.upper()} e {nome2.upper()}</p>
     <p></p>
     <p>Obrigado por utilizar este software de Gian Gabriel</p>
