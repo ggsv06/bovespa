@@ -118,13 +118,20 @@ while True:
             taxa_inicial = cot.taxa(valor1, valor2)
             taxa_inst = cot.taxa(papel1, papel2)
             janela1['output'].update(f"\n{time.strftime('%d/%m/%Y %H:%M:%S')}", append=True)
-            janela1['output'].update(f"\n{nome1}: {papel1}\n{nome2}: {papel2}\nTaxa: {round((taxa_inst-taxa_inicial)*100, 3)}%\n\n", append=True)
+            janela1['output'].update(f"\n{nome1}: {papel1:.2f}\n{nome2}: {papel2:.2f}\nTaxa: {taxa_inst-taxa_inicial:.3%}\n\n", append=True)
             # Condicional de parada
-            if taxa_inst >= taxa_inicial + taxa:
-                meta = True
+            if taxa >= 0:
+                if taxa_inst >= taxa_inicial + taxa:
+                    meta = True
+                else:
+                    meta = False
+                    pass
             else:
-                meta = False
-                pass
+                if taxa_inst <= taxa_inicial + taxa:
+                    meta = True
+                else:
+                    meta = False
+                    pass
             start_time = time.time()
         if meta:
             meta = False
