@@ -25,6 +25,12 @@ def janela_main():
         [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
     return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
+# nome1, nome2 
+# valor1, valor2 
+# taxa 
+# status 
+# output
+# config, save_main, cancel_main, start
 
 def janela_config():
     WIN_W = 25
@@ -35,9 +41,14 @@ def janela_config():
         [sg.Text('Email remetente  '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
         [sg.Text('Senha remetente '), sg.InputText(key='token',size=(int(WIN_W),1))],
         [sg.Text('')],
-        [sg.Button('Carregar', key='load'), sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
+        [sg.Button('Carregar', key='load'), sg.Button('Salvar como', key='save_as_config'), sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
     return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
+# email
+# remetente
+# token
+# load, save_as_config, cancel_config, save_config
+
 
 def janela_files():
     WIN_W = 25
@@ -53,8 +64,15 @@ def janela_files():
         [sg.Text('')],
         [sg.Button('Cancelar', key='cancel_files2'), sg.Button('Excluir', key='del_files2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files2', button_color=('black', '#3de226'))]
     ]
-    layout = [[sg.TabGroup([[sg.Tab("Salvar", layout_save), sg.Tab("Tab 2", layout_load)]])]]
+    layout = [[sg.TabGroup([[sg.Tab("Salvar", layout_save), sg.Tab("Carregar", layout_load)]])]]
     return sg.Window('Arquivos', layout, finalize=True, icon=icon_path)
+# TAB 1: Salvar
+# file_name
+# cancel_files1, save_files 
+
+# TAB 2: Carregar
+# option_files
+# cancel_files2, del_files2, load_files2
 
 janela1, janela2, janela3 = janela_main(), None, None
 running = False
@@ -78,9 +96,9 @@ while True:
         break
     if window == janela2 and event == sg.WIN_CLOSED:
         janela2.hide()
-    # BOTÃO CONFIGURAÇÕES
-    if window == janela1 and event == 'config':
-        janela2 = janela_config()
+    if window == janela3 and event == sg.WIN_CLOSED:
+        janela3.hide()
+
         # Auto preenchimento
         try:
             dic = sav.read_json('config', values_file_name)
