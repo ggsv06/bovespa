@@ -22,7 +22,7 @@ def janela_main():
         [sg.Push(), sg.Text('Desativado', key='status'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
         [sg.Text('')],
-        [sg.Button('Configurações', key='config'), sg.Button('Limpar', key='cls'), sg.Button('Salvar', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
+        [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
     return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
 
@@ -35,24 +35,41 @@ def janela_config():
         [sg.Text('Email remetente  '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
         [sg.Text('Senha remetente '), sg.InputText(key='token',size=(int(WIN_W),1))],
         [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
+        [sg.Button('Carregar', key='load'), sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
     return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
 
-janela1, janela2 = janela_main(), None
+def janela_files():
+    WIN_W = 25
+    WIN_H = 20
+    sg.theme('GrayGrayGray')
+    layout_save = [
+        [sg.Text('Nome'), sg.InputText(key='file_name', size=(int(WIN_W),1))],
+        [sg.Text('')],
+        [sg.Button('Cancelar', key='cancel_files1', button_color=('white', 'red')), sg.Button('Salvar', key='save_files', button_color=('black', '#3de226'))]
+    ]
+    layout_load = [
+        [sg.Text('Selecione o arquivo'), sg.OptionMenu(key='option_files')],
+        [sg.Text('')],
+        [sg.Button('Cancelar', key='cancel_files2'), sg.Button('Excluir', key='del_files2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files2', button_color=('black', '#3de226'))]
+    ]
+    layout = [[sg.TabGroup([[sg.Tab("Salvar", layout_save), sg.Tab("Tab 2", layout_load)]])]]
+    return sg.Window('Arquivos', layout, finalize=True, icon=icon_path)
+
+janela1, janela2, janela3 = janela_main(), None, None
 running = False
 start_time = None
 meta = False
 
-dic = sav.read_json('menu')
-if dic == False:
-    pass
-else:
-    try:
-        for i in ['nome1', 'nome2', 'valor1', 'valor2', 'taxa']:
-            janela1[i].update(dic[i])
-    except:
-        pass
+#dic = sav.read_json('menu')
+#if dic == False:
+    #pass
+#else:
+    #try:
+        #for i in ['nome1', 'nome2', 'valor1', 'valor2', 'taxa']:
+            #janela1[i].update(dic[i])
+    #except:
+        #pass
 
 while True:
     window, event, values = sg.read_all_windows(timeout=1000)
@@ -65,22 +82,27 @@ while True:
     if window == janela1 and event == 'config':
         janela2 = janela_config()
         # Auto preenchimento
-        dic = sav.read_json('config')
-        if dic == False:
-            pass
-        else:
-            try:
-                janela2['email'].update(dic['email'])
-                janela2['remetente'].update(dic['remetente'])
-                janela2['token'].update(dic['token'])
-            except:
+        try:
+            dic = sav.read_json('config', values_file_name)
+            if dic == False:
                 pass
+            else:
+                try:
+                    janela2['email'].update(dic['email'])
+                    janela2['remetente'].update(dic['remetente'])
+                    janela2['token'].update(dic['token'])
+                except:
+                    pass
+        except:
+            pass
+
     # BOTÃO PÁGINA CONFIG CANCELAR
     if window == janela2 and event == 'cancel_config':
         janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
-        result = sav.create_json_config(values['email'], values['remetente'], values['token'])
+        result = sav.create_json_config(values['email'], values['remetente'], values['token'], values['file_name'])
+        values_file_name = values['file_name']
         if result == False:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         janela2.hide()
@@ -140,8 +162,10 @@ while True:
             janela1['start'].update(button_color=('black', '#3de226'))
             janela1['status'].update('Desativado')
             janela1['output'].update('Meta atingida com sucesso!\n', append=True)
-
-            dic_conf = sav.read_json('config')
+            try:
+                dic_conf = sav.read_json('config', values_file_name)
+            except:
+                pass
             try:
                 if dic_conf == False:
                     janela1['output'].update('Nenhum email encontrado\n', append=True)
