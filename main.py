@@ -99,9 +99,12 @@ while True:
     if window == janela3 and event == sg.WIN_CLOSED:
         janela3.hide()
 
+    # BOTÃO PÁGINA MAIN CONFIG
+    if window == janela1 and event == 'config':
+        janela2 = janela_config()
         # Auto preenchimento
         try:
-            dic = sav.read_json('config', values_file_name)
+            dic = sav.read_json('config', file_name)
             if dic == False:
                 pass
             else:
@@ -119,11 +122,23 @@ while True:
         janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
+        try:
+            email = values['email']
+            remetente = values['remetente']
+            token = values['token']
+            file_name = values['file_name']
+        except:
+            sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         result = sav.create_json_config(values['email'], values['remetente'], values['token'], values['file_name'])
-        values_file_name = values['file_name']
         if result == False:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         janela2.hide()
+    # BOTÃO PÁGINA CONFIG SALVAR COMO
+    if window == janela2 and event == 'save_as_config':
+        janela3 = janela_files()
+        janela3['option_files'].update(['None'])
+
+
     
     # COMANDOS JANELA MAIN
     if window == janela1 and event == 'start':

@@ -1,0 +1,24 @@
+    MENU
+nome1, nome2 
+valor1, valor2 
+taxa 
+status 
+output
+config, save_main, cancel_main, start
+
+    CONFIGURAÇÕES
+email
+remetente
+token
+load, save_as_config, cancel_config, save_config
+
+    ARQUIVOS
+TAB 1: Salvar
+file_name
+cancel_files1, save_files 
+
+TAB 2: Carregar
+option_files
+cancel_files2, del_files2, load_files2
+
+    
