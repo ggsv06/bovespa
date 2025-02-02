@@ -61,31 +61,38 @@ while True:
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
         try:
+            nome_pre = values['nome_pre']
             email = values['email']
             remetente = values['remetente']
             token = values['token']
         except:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
-        result = sav.create_json_config(values['email'], values['remetente'], values['token'], values['file_name'])
+            continue
+        result = sav.create_json_config(email, remetente, token, nome_pre)
         if result == False:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         janela2.hide()
-    # BOTÃO PÁGINA CONFIG SALVAR COMO
-    if window == janela2 and event == 'files_config':
-        janela3 = janela_files(icon_path)
+    # BOTÃO PÁGINA CONFIG DEL LOAD
+    if window == janela2 and event == 'del_load':
+        predefinição = values['option_files']
+        result = sav.del_json_pre('config', predefinição)
+        if result == False:
+            sg.popup('Ocorreu um erro', icon=icon_path)
+        else:
+            sg.popup('Predefinição deletada com sucesso!', icon=icon_path)
 
     # BOTÃO TAB SAVE: CANCELAR
     if window == janela3 and event == 'cancel_files1':
         janela3.hide()
     # BOTÃO TAB SAVE: SAVE
     if window == janela3 and event == 'save_files':
-        try:
-            file_name = values['file_name']
-            sav.create_json_config(email, remetente, token, file_name)
-            sg.popup('Dados salvos com sucesso!', icon=icon_path)
-            janela3.hide()
-        except:
-            sg.popup('1Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
+        #try:
+        file_name = values['file_name']
+        sav.create_json_config(email, remetente, token, file_name)
+        sg.popup('Dados salvos com sucesso!', icon=icon_path)
+        janela3.hide()
+        #except:
+            #sg.popup('1Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
     
     # COMANDOS JANELA MAIN
     if window == janela1 and event == 'start':

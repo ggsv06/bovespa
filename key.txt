@@ -7,18 +7,24 @@ output
 config, save_main, cancel_main, start
 
     CONFIGURAÇÕES
+TAB 1: EMAILS
+nome_pre
 email
 remetente
 token
-files_config, cancel_config, save_config
+cancel_config, save_config
 
-    ARQUIVOS
-TAB 1: Salvar
-file_name
-cancel_files1, save_files 
-
-TAB 2: Carregar
+TAB2: CARREGAR
 option_files
-cancel_files2, del_files2, load_files2
+del_load, load_load
+
+    # ARQUIVOS
+# TAB 1: Salvar
+# file_name
+# cancel_files1, save_files 
+
+# TAB 2: Carregar
+# option_files
+# cancel_files2, del_files2, load_files2
 
     

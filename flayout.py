@@ -25,13 +25,23 @@ def janela_config(icon_path):
     WIN_W = 25
     WIN_H = 20
     sg.theme('GrayGrayGray')
-    layout = [
-        [sg.Text('Email destinatário'), sg.InputText(key='email',size=(int(WIN_W),1))],
-        [sg.Text('Email remetente  '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
-        [sg.Text('Senha remetente '), sg.InputText(key='token',size=(int(WIN_W),1))],
+    layout_emails = [
+        [sg.Text('Nome da predefinição'), sg.InputText(key='nome_pre', size=(int(WIN_W),1))],
+        [sg.Text('Email destinatário     '), sg.InputText(key='email',size=(int(WIN_W),1))],
+        [sg.Text('Email remetente       '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
+        [sg.Text('Senha remetente      '), sg.InputText(key='token',size=(int(WIN_W),1))],
         [sg.Text('')],
-        [sg.Button('Arquivos', key='files_config'), sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
+        [sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
+    layout_carregar = [
+        [sg.Text('Selecione a predefinição')],
+        [sg.OptionMenu(['Selecionar'], key='option_files')],
+        [sg.Text('')],
+        [sg.Text('')],
+        [sg.Text('')],
+        [sg.Button('Excluir', key='del_load', button_color=('white', 'red')), sg.Button('Carregar', key='load_load', button_color=('white', '#6ab2e4'))]
+    ]
+    layout = [[sg.TabGroup([[sg.Tab("Emails", layout_emails), sg.Tab("Carregar", layout_carregar)]])]]
     return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
 # email
 # remetente

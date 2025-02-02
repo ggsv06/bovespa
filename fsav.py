@@ -83,6 +83,30 @@ def read_json(mode, nsave):
     else:
         return False
 
+def del_json_pre(mode, nsave):
+    appdata_path = os.getenv('APPDATA')
+    file_path = os.path.join(appdata_path, 'bov_data.json')
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            try:
+                data_dic = json.load(f)
+            except:
+                return False 
+    else:
+        return False
+    try:
+        del data_dic[mode][nsave]
+        # Salvar arquivo
+        try:
+            with open(file_path, "w") as f:
+                json.dump(data_dic, f, indent=4)
+            return True
+        except:
+            return False
+    except:
+        return False
+
+
  
 if __name__ == '__main__':
     create_json_config('ggsv', 'qwerty', 123, 'parte1')
