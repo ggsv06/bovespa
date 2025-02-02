@@ -10,7 +10,7 @@ config, save_main, cancel_main, start
 email
 remetente
 token
-load, save_as_config, cancel_config, save_config
+files_config, cancel_config, save_config
 
     ARQUIVOS
 TAB 1: Salvar

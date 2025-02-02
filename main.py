@@ -1,80 +1,18 @@
-import PySimpleGUI as sg
 import fcot as cot
 import fsav as sav
 import fmsg as mil
+from flayout import *
 import time
 import sys
 import os
 
+# CAMINHO DO ICO
 if getattr(sys, 'frozen', False):  # If running as a compiled .exe
     icon_path = os.path.join(sys._MEIPASS, 'img.ico')
 else:  # If running as a .py file
     icon_path = 'img.ico'
 
-def janela_main():
-    WIN_W = 30
-    WIN_H = 50
-    sg.theme('GrayGrayGray')
-    layout_main = [
-        [sg.Text('Ativo Bovespa'), sg.InputText(key='nome1', size=(int(WIN_W/2),1)), sg.InputText(key='nome2', size=(int(WIN_W/2),1))],
-        [sg.Text('Preços          '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
-        [sg.Text('Meta %         '), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
-        [sg.Push(), sg.Text('Desativado', key='status'), sg.Push()],
-        [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
-        [sg.Text('')],
-        [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
-    ]
-    return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
-# nome1, nome2 
-# valor1, valor2 
-# taxa 
-# status 
-# output
-# config, save_main, cancel_main, start
-
-def janela_config():
-    WIN_W = 25
-    WIN_H = 20
-    sg.theme('GrayGrayGray')
-    layout = [
-        [sg.Text('Email destinatário'), sg.InputText(key='email',size=(int(WIN_W),1))],
-        [sg.Text('Email remetente  '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
-        [sg.Text('Senha remetente '), sg.InputText(key='token',size=(int(WIN_W),1))],
-        [sg.Text('')],
-        [sg.Button('Carregar', key='load'), sg.Button('Salvar como', key='save_as_config'), sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
-    ]
-    return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
-# email
-# remetente
-# token
-# load, save_as_config, cancel_config, save_config
-
-
-def janela_files():
-    WIN_W = 25
-    WIN_H = 20
-    sg.theme('GrayGrayGray')
-    layout_save = [
-        [sg.Text('Nome'), sg.InputText(key='file_name', size=(int(WIN_W),1))],
-        [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_files1', button_color=('white', 'red')), sg.Button('Salvar', key='save_files', button_color=('black', '#3de226'))]
-    ]
-    layout_load = [
-        [sg.Text('Selecione o arquivo'), sg.OptionMenu(key='option_files')],
-        [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_files2'), sg.Button('Excluir', key='del_files2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files2', button_color=('black', '#3de226'))]
-    ]
-    layout = [[sg.TabGroup([[sg.Tab("Salvar", layout_save), sg.Tab("Carregar", layout_load)]])]]
-    return sg.Window('Arquivos', layout, finalize=True, icon=icon_path)
-# TAB 1: Salvar
-# file_name
-# cancel_files1, save_files 
-
-# TAB 2: Carregar
-# option_files
-# cancel_files2, del_files2, load_files2
-
-janela1, janela2, janela3 = janela_main(), None, None
+janela1, janela2, janela3 = janela_main(icon_path), None, None
 running = False
 start_time = None
 meta = False
@@ -101,7 +39,7 @@ while True:
 
     # BOTÃO PÁGINA MAIN CONFIG
     if window == janela1 and event == 'config':
-        janela2 = janela_config()
+        janela2 = janela_config(icon_path)
         # Auto preenchimento
         try:
             dic = sav.read_json('config', file_name)
@@ -126,7 +64,6 @@ while True:
             email = values['email']
             remetente = values['remetente']
             token = values['token']
-            file_name = values['file_name']
         except:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         result = sav.create_json_config(values['email'], values['remetente'], values['token'], values['file_name'])
@@ -134,11 +71,21 @@ while True:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
         janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR COMO
-    if window == janela2 and event == 'save_as_config':
-        janela3 = janela_files()
-        janela3['option_files'].update(['None'])
+    if window == janela2 and event == 'files_config':
+        janela3 = janela_files(icon_path)
 
-
+    # BOTÃO TAB SAVE: CANCELAR
+    if window == janela3 and event == 'cancel_files1':
+        janela3.hide()
+    # BOTÃO TAB SAVE: SAVE
+    if window == janela3 and event == 'save_files':
+        try:
+            file_name = values['file_name']
+            sav.create_json_config(email, remetente, token, file_name)
+            sg.popup('Dados salvos com sucesso!', icon=icon_path)
+            janela3.hide()
+        except:
+            sg.popup('1Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
     
     # COMANDOS JANELA MAIN
     if window == janela1 and event == 'start':
