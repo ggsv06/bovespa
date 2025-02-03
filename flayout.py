@@ -35,7 +35,7 @@ def janela_config(icon_path):
     ]
     layout_carregar = [
         [sg.Text('Selecione a predefinição')],
-        [sg.OptionMenu(['Selecionar'], key='option_files')],
+        [sg.OptionMenu(['Nenhum'], key='option_files', default_value='Nenhum')],
         [sg.Text('')],
         [sg.Text('')],
         [sg.Text('')],

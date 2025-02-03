@@ -16,6 +16,10 @@ janela1, janela2, janela3 = janela_main(icon_path), None, None
 running = False
 start_time = None
 meta = False
+try:
+    predefinição = sav.read_json_keys('config')[0]
+except:
+    pass
 
 #dic = sav.read_json('menu')
 #if dic == False:
@@ -29,6 +33,7 @@ meta = False
 
 while True:
     window, event, values = sg.read_all_windows(timeout=1000)
+
     # X
     if window == janela1 and event == sg.WIN_CLOSED:
         break
@@ -42,16 +47,23 @@ while True:
         janela2 = janela_config(icon_path)
         # Auto preenchimento
         try:
-            dic = sav.read_json('config', file_name)
+            dic = sav.read_json('config', predefinição)
             if dic == False:
                 pass
             else:
                 try:
+                    janela2['nome_pre'].update(predefinição)
                     janela2['email'].update(dic['email'])
                     janela2['remetente'].update(dic['remetente'])
                     janela2['token'].update(dic['token'])
                 except:
                     pass
+        except:
+            pass
+        # Atualizar opções do option menu
+        try:
+                keys = sav.read_json_keys('config')
+                janela2['option_files'].update(values=keys, value=keys[0])
         except:
             pass
 
@@ -60,34 +72,43 @@ while True:
         janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
-        try:
-            nome_pre = values['nome_pre']
-            email = values['email']
-            remetente = values['remetente']
-            token = values['token']
-        except:
+        predefinição = values['nome_pre']
+        email = values['email']
+        remetente = values['remetente']
+        token = values['token']
+        if '' in [predefinição, email, remetente, token]:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
             continue
-        result = sav.create_json_config(email, remetente, token, nome_pre)
-        if result == False:
-            sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
+        result = sav.create_json_config(email, remetente, token, predefinição)
+        sg.popup('Dados salvos com sucesso!', icon=icon_path)
         janela2.hide()
     # BOTÃO PÁGINA CONFIG DEL LOAD
     if window == janela2 and event == 'del_load':
-        predefinição = values['option_files']
-        result = sav.del_json_pre('config', predefinição)
+        if values['option_files'] == values['nome_pre']:
+            for i in ['nome_pre', 'email', 'remetente', 'token']:
+                janela2[i].update('')
+        result = sav.del_json_pre('config', values['option_files'])
         if result == False:
             sg.popup('Ocorreu um erro', icon=icon_path)
         else:
-            sg.popup('Predefinição deletada com sucesso!', icon=icon_path)
+            keys = sav.read_json_keys('config')
+            if len(keys) == 0:
+                keys = ['Nenhum']
+            janela2['option_files'].update(values=keys, value=keys[0])
+            sg.popup('Dados excluidos com sucesso!', icon=icon_path)
     # BOTÃO PÁGINA CONFIG CARREGAR LOAD
     if window == janela2 and event == 'load_load':
         try:
             predefinição = values['option_files']
             dic = sav.read_json('config', predefinição)
-            janela2['nome_pre'].update(dic(predefinição))
-            janela2['nome_pre'].update(dic(predefinição))
-
+            janela2['nome_pre'].update(predefinição)
+            janela2['email'].update(dic['email'])
+            janela2['remetente'].update(dic['remetente'])
+            janela2['token'].update(dic['token'])
+            sg.popup('Dados adicionados com sucesso!', icon=icon_path)
+            janela2.hide()
+        except:
+            sg.popup('Não foi possível carregar os dados.', icon=icon_path)
 
     # BOTÃO TAB SAVE: CANCELAR
     if window == janela3 and event == 'cancel_files1':
@@ -158,7 +179,7 @@ while True:
             janela1['status'].update('Desativado')
             janela1['output'].update('Meta atingida com sucesso!\n', append=True)
             try:
-                dic_conf = sav.read_json('config', values_file_name)
+                dic_conf = sav.read_json('config', predefinição)
             except:
                 pass
             try:

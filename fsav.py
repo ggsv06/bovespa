@@ -83,6 +83,19 @@ def read_json(mode, nsave):
     else:
         return False
 
+def read_json_keys(mode):
+    appdata_path = os.getenv('APPDATA')
+    file_path = os.path.join(appdata_path, 'bov_data.json')
+    if os.path.exists(file_path):
+        with open(file_path, 'r') as f:
+            dic = json.load(f)[mode]
+            l_return = []
+            for i in dic.keys():
+                l_return.append(i)
+            return l_return
+    else:
+        return False
+
 def del_json_pre(mode, nsave):
     appdata_path = os.getenv('APPDATA')
     file_path = os.path.join(appdata_path, 'bov_data.json')
