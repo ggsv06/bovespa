@@ -19,7 +19,7 @@ meta = False
 try:
     predefinição = sav.read_json_keys('config')[0]
 except:
-    pass
+    predefinição = 'Nenhum'
 
 #dic = sav.read_json('menu')
 #if dic == False:
@@ -115,13 +115,10 @@ while True:
         janela3.hide()
     # BOTÃO TAB SAVE: SAVE
     if window == janela3 and event == 'save_files':
-        #try:
-        file_name = values['file_name']
-        sav.create_json_config(email, remetente, token, file_name)
+        nome_temp = values['file_name']
+        sav.create_json_config(email, remetente, token, nome_temp)
         sg.popup('Dados salvos com sucesso!', icon=icon_path)
         janela3.hide()
-        #except:
-            #sg.popup('1Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
     
     # COMANDOS JANELA MAIN
     if window == janela1 and event == 'start':

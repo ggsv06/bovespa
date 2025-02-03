@@ -43,10 +43,15 @@ def janela_config(icon_path):
     ]
     layout = [[sg.TabGroup([[sg.Tab("Emails", layout_emails), sg.Tab("Carregar", layout_carregar)]])]]
     return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
+    # TAB1 emails:
+# nome_pre
 # email
 # remetente
 # token
-# files_config, cancel_config, save_config
+# cancel_config, save_config
+    # TAB2 carregar:
+# option_files
+# del_load, load_load
 
 
 def janela_files(icon_path):
@@ -55,22 +60,22 @@ def janela_files(icon_path):
     sg.theme('GrayGrayGray')
     layout_save = [
         [sg.Text('Nome da nova predefinição'), sg.Push()],
-        [sg.InputText(key='file_name', size=(int(WIN_W),1))],
+        [sg.InputText(key='file_name_menu', size=(int(WIN_W),1))],
         [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_files1', button_color=('white', 'red')), sg.Button('Salvar', key='save_files', button_color=('black', '#3de226'))]
+        [sg.Button('Cancelar', key='cancel_files_menu1', button_color=('white', 'red')), sg.Button('Salvar', key='save_files_menu', button_color=('black', '#3de226'))]
     ]
     layout_load = [
         [sg.Text('Selecione a predefinição a ser carregada')],
-        [sg.OptionMenu(['Selecionar'], key='option_files', default_value='Selecionar')],
+        [sg.OptionMenu(['Nenhum'], key='option_files_menu', default_value='Nenhum')],
         [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_files2'), sg.Button('Excluir', key='del_files2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files2', button_color=('black', '#3de226'))]
+        [sg.Button('Cancelar', key='cancel_files_menu2'), sg.Button('Excluir', key='del_files_menu2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files_menu2', button_color=('black', '#3de226'))]
     ]
     layout = [[sg.TabGroup([[sg.Tab("Salvar", layout_save), sg.Tab("Carregar", layout_load)]])]]
     return sg.Window('Arquivos', layout, finalize=True, icon=icon_path)
-# TAB 1: Salvar
-# file_name
-# cancel_files1, save_files 
+    # TAB 1: Salvar
+# file_name_menu
+# cancel_files_menu1, save_files_menu 
 
-# TAB 2: Carregar
-# option_files
-# cancel_files2, del_files2, load_files2
+    # TAB 2: Carregar
+# option_files_menu
+# cancel_files_menu2, del_files_menu2, load_files_menu2

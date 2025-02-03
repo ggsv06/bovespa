@@ -7,6 +7,7 @@ output
 config, save_main, cancel_main, start
 
     CONFIGURAÇÕES
+    
 TAB 1: EMAILS
 nome_pre
 email
@@ -18,13 +19,13 @@ TAB2: CARREGAR
 option_files
 del_load, load_load
 
-    # ARQUIVOS
-# TAB 1: Salvar
-# file_name
-# cancel_files1, save_files 
+    ARQUIVOS
 
-# TAB 2: Carregar
-# option_files
-# cancel_files2, del_files2, load_files2
+    # TAB 1: Salvar
+# file_name_menu
+# cancel_files_menu1, save_files_menu 
 
-    
+    # TAB 2: Carregar
+# option_files_menu
+# cancel_files_menu2, del_files_menu2, load_files_menu2
+   
