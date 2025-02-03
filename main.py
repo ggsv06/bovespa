@@ -80,6 +80,14 @@ while True:
             sg.popup('Ocorreu um erro', icon=icon_path)
         else:
             sg.popup('Predefinição deletada com sucesso!', icon=icon_path)
+    # BOTÃO PÁGINA CONFIG CARREGAR LOAD
+    if window == janela2 and event == 'load_load':
+        try:
+            predefinição = values['option_files']
+            dic = sav.read_json('config', predefinição)
+            janela2['nome_pre'].update(dic(predefinição))
+            janela2['nome_pre'].update(dic(predefinição))
+
 
     # BOTÃO TAB SAVE: CANCELAR
     if window == janela3 and event == 'cancel_files1':
