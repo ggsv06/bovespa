@@ -9,11 +9,11 @@ def janela_main(icon_path):
         [sg.Text('Preços             '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
         [sg.Text('Meta %            '), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
         [sg.Push(), sg.Text('--- Desativado ---', key='status', text_color='red'), sg.Push()],
-        [sg.Text('Email '), sg.Text('Nenhum', key='status_email', text_color='red'), sg.Push()],
-        [sg.Text('Ativos '), sg.Text('Nenhum', key='status_ativos', text_color='red'), sg.Push()],
+        [sg.Text('Email      '), sg.Text('Nenhum', key='status_email', text_color='red'), sg.Push()],
+        [sg.Text('Estratégia'), sg.Text('Nenhum', key='status_ativos', text_color='red'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
         [sg.Text('')],
-        [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='files_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
+        [sg.Button('Configurações', key='config'), sg.Button('Estratégia', key='files_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
     return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
 # nome1, nome2 
@@ -61,13 +61,13 @@ def janela_files(icon_path):
     WIN_H = 20
     sg.theme('GrayGrayGray')
     layout_save = [
-        [sg.Text('Nome da nova predefinição'), sg.Push()],
+        [sg.Text('Nome da nova estratégia'), sg.Push()],
         [sg.InputText(key='file_name_menu', size=(int(WIN_W),1))],
         [sg.Text('')],
         [sg.Button('Cancelar', key='cancel_files_menu1'), sg.Button('Salvar', key='save_files_menu', button_color=('black', '#3de226'))]
     ]
     layout_load = [
-        [sg.Text('Selecione a predefinição a ser carregada')],
+        [sg.Text('Selecione a estratégia a ser carregada')],
         [sg.OptionMenu(['Nenhum'], key='option_files_menu', default_value='Nenhum')],
         [sg.Text('')],
         [sg.Button('Cancelar', key='cancel_files_menu2'), sg.Button('Excluir', key='del_files_menu2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files_menu2', button_color=('black', '#6ab2e4'))]
