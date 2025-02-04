@@ -5,10 +5,12 @@ def janela_main(icon_path):
     WIN_H = 50
     sg.theme('GrayGrayGray')
     layout_main = [
-        [sg.Text('Ativo Bovespa'), sg.InputText(key='nome1', size=(int(WIN_W/2),1)), sg.InputText(key='nome2', size=(int(WIN_W/2),1))],
-        [sg.Text('Preços          '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
-        [sg.Text('Meta %         '), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
-        [sg.Push(), sg.Text('Desativado', key='status'), sg.Push()],
+        [sg.Text('Ativo Bovespa   '), sg.InputText(key='nome1', size=(int(WIN_W/2),1)), sg.InputText(key='nome2', size=(int(WIN_W/2),1))],
+        [sg.Text('Preços             '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
+        [sg.Text('Meta %            '), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
+        [sg.Push(), sg.Text('--- Desativado ---', key='status', text_color='red'), sg.Push()],
+        [sg.Text('Email '), sg.Text('Nenhum', key='status_email', text_color='red'), sg.Push()],
+        [sg.Text('Ativos '), sg.Text('Nenhum', key='status_ativos', text_color='red'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
         [sg.Text('')],
         [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='files_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]

@@ -16,10 +16,11 @@ janela1, janela2, janela3 = janela_main(icon_path), None, None
 running = False
 start_time = None
 meta = False
-try:
-    predefinição = sav.read_json_keys('config')[0]
-except:
-    predefinição = 'Nenhum'
+temp = False
+# try:
+    # predefinição = sav.read_json_keys('config')[0]
+# except:
+    # predefinição = 'Nenhum'
 
 #dic = sav.read_json('menu')
 #if dic == False:
@@ -66,7 +67,7 @@ while True:
                 janela2['option_files'].update(values=keys, value=keys[0])
         except:
             pass
-
+        
     # BOTÃO PÁGINA CONFIG CANCELAR
     if window == janela2 and event == 'cancel_config':
         janela2.hide()
@@ -82,6 +83,11 @@ while True:
             sg.popup('Ocorreu um erro. Verifique se todos os dados foram inseridos.', icon=icon_path)
             continue
         result = sav.create_json_config(email, remetente, token, predefinição)
+        # Atualizar status email
+        try:
+            janela1['status_email'].update(predefinição, text_color='green')
+        except:
+            pass
         sg.popup('Dados salvos com sucesso!', icon=icon_path)
         janela2.hide()
     # BOTÃO PÁGINA CONFIG DEL LOAD
@@ -97,7 +103,12 @@ while True:
             if len(keys) == 0:
                 keys = ['Nenhum']
             janela2['option_files'].update(values=keys, value=keys[0])
+            try:
+                janela1['status_email'].update('Nenhum', text_color='red')
+            except:
+                pass
             sg.popup('Dados excluidos com sucesso!', icon=icon_path)
+
     # BOTÃO PÁGINA CONFIG CARREGAR LOAD
     if window == janela2 and event == 'load_load':
         try:
@@ -107,6 +118,10 @@ while True:
             janela2['email'].update(dic['email'])
             janela2['remetente'].update(dic['remetente'])
             janela2['token'].update(dic['token'])
+            try:
+                janela1['status_email'].update(predefinição, text_color='green')
+            except:
+                pass
             sg.popup('Dados carregados com sucesso!', icon=icon_path)
             janela2.hide()
         except:
@@ -118,8 +133,8 @@ while True:
         janela3 = janela_files(icon_path)
         # Atualizar opções do option menu
         try:
-                keys = sav.read_json_keys('menu')
-                janela3['option_files_menu'].update(values=keys, value=keys[0])
+            keys = sav.read_json_keys('menu')
+            janela3['option_files_menu'].update(values=keys, value=keys[0])
         except:
             pass
     # BOTÃO TAB SAVE: CANCELAR
@@ -128,35 +143,38 @@ while True:
     if window == janela3 and event == 'cancel_files_menu2':
         janela3.hide()
     # BOTÃO TAB SAVE: SAVE
-    if window == janela3 and event == 'save_files_menu':
+    if event == 'save_files_menu':
         nome_temp = values['file_name_menu']
         if nome_temp == '':
             sg.popup('Digite um nome válido.', icon=icon_path)
             continue
         try:
             sav.create_json_menu(nome1, nome2, valor1, valor2, taxa, nome_temp)
+            janela1['status_ativos'].update(nome_temp, text_color='green')
             sg.popup('Dados salvos com sucesso!', icon=icon_path)
             janela3.hide()
         except:
             sg.popup('Ocorreu um erro.', icon=icon_path)
+        # Atualizar status ativos
     # BOTÃO TAB LOAD: CARREGAR
     if window == janela3 and event == 'load_files_menu2':
         try:
             predefinição_menu = values['option_files_menu']
-            janela3.hide()
-            temp = True
-            # Fazer um condicional fora deste if para carregar menu
             dic = sav.read_json('menu', predefinição_menu)
-            janela3['nome1'].update(dic['nome1'])
-            janela3['nome2'].update(dic['nome2'])
-            janela3['valor1'].update(dic['valor1'])
-            janela3['valor2'].update(dic['valor2'])
-            janela3['taxa'].update(dic['taxa'])
+            # Auto preenchimento
+            janela1['nome1'].update(dic['nome1'])
+            janela1['nome2'].update(dic['nome2'])
+            janela1['valor1'].update(dic['valor1'])
+            janela1['valor2'].update(dic['valor2'])
+            janela1['taxa'].update(dic['taxa'])
+            # Atualizar status
+            janela1['status_ativos'].update(predefinição_menu, text_color='green')
             sg.popup('Dados carregados com sucesso!', icon=icon_path)
+            janela3.hide()
         except:
             sg.popup('Não foi possível carregar os dados.', icon=icon_path)
     # BOTÃO PÁGINA CONFIG DEL LOAD
-    if window == janela3 and event == 'del_files_menu2':
+    if event == 'del_files_menu2':
         result = sav.del_json_pre('menu', values['option_files_menu'])
         if result == False:
             sg.popup('Ocorreu um erro', icon=icon_path)
@@ -165,6 +183,7 @@ while True:
             if len(keys) == 0:
                 keys = ['Nenhum']
             janela3['option_files_menu'].update(values=keys, value=keys[0])
+            janela1['status_ativos'].update('Nenhum', text_color='red')
             sg.popup('Dados excluidos com sucesso!', icon=icon_path)
     
     # COMANDOS JANELA MAIN
@@ -175,7 +194,7 @@ while True:
             taxa = cot.virgula(values['taxa'])*0.01
             nome1 = values['nome1'].upper()
             nome2 = values['nome2'].upper()
-            janela1['status'].update('Ativado')
+            janela1['status'].update('--- Ativado ---', text_color='green')
             janela1['cancel_main'].update(button_color=('white', 'red'))
             janela1['start'].update(button_color=('white', 'grey'))
             running = True
@@ -189,7 +208,7 @@ while True:
         running = False
         janela1['cancel_main'].update(button_color=('white', 'grey'))
         janela1['start'].update(button_color=('black', '#3de226'))
-        janela1['status'].update('Desativado')
+        janela1['status'].update('--- Desativado ---', text_color='red')
 
     # A cada 60 segundos o cálculo é realizado
     if running:
@@ -215,12 +234,13 @@ while True:
                     meta = False
                     pass
             start_time = time.time()
+        # Disparar email
         if meta:
             meta = False
             running = False
             janela1['cancel_main'].update(button_color=('white', 'gray'))
             janela1['start'].update(button_color=('black', '#3de226'))
-            janela1['status'].update('Desativado')
+            janela1['status'].update('--- Desativado ---', text_color='red')
             janela1['output'].update('Meta atingida com sucesso!\n', append=True)
             try:
                 dic_conf = sav.read_json('config', predefinição)
@@ -235,20 +255,3 @@ while True:
             except Exception as e:
                 janela1['output'].update('Email não pode ser enviado.\n')
             sg.popup('Meta Atingida com sucesso!', icon=icon_path)
-    
-    # BOTÃO SALVAR DADOS DO MENU
-    if window == janela1 and event == 'save_main':
-        result = sav.create_json_menu(values['nome1'], values['nome2'], values['valor1'], values['valor2'], values['taxa'])
-        if result == True:
-            janela1['output'].update('Dados salvos com sucesso!\n', append=True)
-        else:
-            janela1['output'].update('Ocorreu um erro, verifique se os dados estão corretos.\n', append=True)
-
-    # BOTÃO LIMPAR DADOS DO MENU
-    if window == janela1 and event == 'cls':
-        result = sav.create_json_menu('', '', '', '', '')
-        if result == True:
-            for i in ['nome1', 'nome2', 'valor1', 'valor2', 'taxa']:
-                janela1[i].update('')
-    
-        

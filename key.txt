@@ -3,6 +3,8 @@ nome1, nome2
 valor1, valor2 
 taxa 
 status 
+status_email
+status_ativos
 output
 config, files_main, cancel_main, start
 
