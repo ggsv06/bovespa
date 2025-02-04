@@ -44,7 +44,7 @@ while True:
         janela3.hide()
 
     # BOTÃO PÁGINA MAIN CONFIG
-    if window == janela1 and event == 'config':
+    if window == janela1 and event == 'config' and running == False:
         janela2 = janela_config(icon_path)
         # Auto preenchimento
         try:
@@ -128,7 +128,7 @@ while True:
             sg.popup('Não foi possível carregar os dados.', icon=icon_path)
 
     # BOTÃO ARQUIVOS
-    if window == janela1 and event == 'files_main':
+    if window == janela1 and event == 'files_main' and running == False:
         nome1, nome2, valor1, valor2, taxa = values['nome1'], values['nome2'], values['valor1'], values['valor2'], values['taxa']
         janela3 = janela_files(icon_path)
         # Atualizar opções do option menu
