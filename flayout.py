@@ -11,7 +11,7 @@ def janela_main(icon_path):
         [sg.Push(), sg.Text('Desativado', key='status'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
         [sg.Text('')],
-        [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='save_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
+        [sg.Button('Configurações', key='config'), sg.Button('Arquivos', key='files_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
     return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
 # nome1, nome2 
@@ -31,7 +31,7 @@ def janela_config(icon_path):
         [sg.Text('Email remetente       '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
         [sg.Text('Senha remetente      '), sg.InputText(key='token',size=(int(WIN_W),1))],
         [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_config', button_color=('white', 'red')), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
+        [sg.Button('Cancelar', key='cancel_config'), sg.Button('Salvar', key='save_config', button_color=('black', '#3de226'))]
     ]
     layout_carregar = [
         [sg.Text('Selecione a predefinição')],
@@ -39,7 +39,7 @@ def janela_config(icon_path):
         [sg.Text('')],
         [sg.Text('')],
         [sg.Text('')],
-        [sg.Button('Excluir', key='del_load', button_color=('white', 'red')), sg.Button('Carregar', key='load_load', button_color=('white', '#6ab2e4'))]
+        [sg.Button('Cancelar', key='cancel_config2'), sg.Button('Excluir', key='del_load', button_color=('white', 'red')), sg.Button('Carregar', key='load_load', button_color=('white', '#6ab2e4'))]
     ]
     layout = [[sg.TabGroup([[sg.Tab("Emails", layout_emails), sg.Tab("Carregar", layout_carregar)]])]]
     return sg.Window('Configurações',layout, finalize=True, icon=icon_path)
@@ -62,13 +62,13 @@ def janela_files(icon_path):
         [sg.Text('Nome da nova predefinição'), sg.Push()],
         [sg.InputText(key='file_name_menu', size=(int(WIN_W),1))],
         [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_files_menu1', button_color=('white', 'red')), sg.Button('Salvar', key='save_files_menu', button_color=('black', '#3de226'))]
+        [sg.Button('Cancelar', key='cancel_files_menu1'), sg.Button('Salvar', key='save_files_menu', button_color=('black', '#3de226'))]
     ]
     layout_load = [
         [sg.Text('Selecione a predefinição a ser carregada')],
         [sg.OptionMenu(['Nenhum'], key='option_files_menu', default_value='Nenhum')],
         [sg.Text('')],
-        [sg.Button('Cancelar', key='cancel_files_menu2'), sg.Button('Excluir', key='del_files_menu2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files_menu2', button_color=('black', '#3de226'))]
+        [sg.Button('Cancelar', key='cancel_files_menu2'), sg.Button('Excluir', key='del_files_menu2', button_color=('white', 'red')), sg.Button('Carregar', key='load_files_menu2', button_color=('black', '#6ab2e4'))]
     ]
     layout = [[sg.TabGroup([[sg.Tab("Salvar", layout_save), sg.Tab("Carregar", layout_load)]])]]
     return sg.Window('Arquivos', layout, finalize=True, icon=icon_path)

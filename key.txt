@@ -4,10 +4,10 @@ valor1, valor2
 taxa 
 status 
 output
-config, save_main, cancel_main, start
+config, files_main, cancel_main, start
 
     CONFIGURAÇÕES
-    
+
 TAB 1: EMAILS
 nome_pre
 email
@@ -17,15 +17,14 @@ cancel_config, save_config
 
 TAB2: CARREGAR
 option_files
-del_load, load_load
+cancel_config2, del_load, load_load
 
     ARQUIVOS
 
-    # TAB 1: Salvar
-# file_name_menu
-# cancel_files_menu1, save_files_menu 
+TAB 1: Salvar
+file_name_menu
+cancel_files_menu1, save_files_menu 
 
-    # TAB 2: Carregar
-# option_files_menu
-# cancel_files_menu2, del_files_menu2, load_files_menu2
-   
+TAB 2: Carregar
+option_files_menu
+cancel_files_menu2, del_files_menu2, load_files_menu2

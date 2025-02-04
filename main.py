@@ -70,6 +70,8 @@ while True:
     # BOTÃO PÁGINA CONFIG CANCELAR
     if window == janela2 and event == 'cancel_config':
         janela2.hide()
+    if window == janela2 and event == 'cancel_config2':
+        janela2.hide()
     # BOTÃO PÁGINA CONFIG SALVAR
     if window == janela2 and event == 'save_config':
         predefinição = values['nome_pre']
@@ -105,20 +107,65 @@ while True:
             janela2['email'].update(dic['email'])
             janela2['remetente'].update(dic['remetente'])
             janela2['token'].update(dic['token'])
-            sg.popup('Dados adicionados com sucesso!', icon=icon_path)
+            sg.popup('Dados carregados com sucesso!', icon=icon_path)
             janela2.hide()
         except:
             sg.popup('Não foi possível carregar os dados.', icon=icon_path)
 
+    # BOTÃO ARQUIVOS
+    if window == janela1 and event == 'files_main':
+        nome1, nome2, valor1, valor2, taxa = values['nome1'], values['nome2'], values['valor1'], values['valor2'], values['taxa']
+        janela3 = janela_files(icon_path)
+        # Atualizar opções do option menu
+        try:
+                keys = sav.read_json_keys('menu')
+                janela3['option_files_menu'].update(values=keys, value=keys[0])
+        except:
+            pass
     # BOTÃO TAB SAVE: CANCELAR
-    if window == janela3 and event == 'cancel_files1':
+    if window == janela3 and event == 'cancel_files_menu1':
+        janela3.hide()
+    if window == janela3 and event == 'cancel_files_menu2':
         janela3.hide()
     # BOTÃO TAB SAVE: SAVE
-    if window == janela3 and event == 'save_files':
-        nome_temp = values['file_name']
-        sav.create_json_config(email, remetente, token, nome_temp)
-        sg.popup('Dados salvos com sucesso!', icon=icon_path)
-        janela3.hide()
+    if window == janela3 and event == 'save_files_menu':
+        nome_temp = values['file_name_menu']
+        if nome_temp == '':
+            sg.popup('Digite um nome válido.', icon=icon_path)
+            continue
+        try:
+            sav.create_json_menu(nome1, nome2, valor1, valor2, taxa, nome_temp)
+            sg.popup('Dados salvos com sucesso!', icon=icon_path)
+            janela3.hide()
+        except:
+            sg.popup('Ocorreu um erro.', icon=icon_path)
+    # BOTÃO TAB LOAD: CARREGAR
+    if window == janela3 and event == 'load_files_menu2':
+        try:
+            predefinição_menu = values['option_files_menu']
+            janela3.hide()
+            temp = True
+            # Fazer um condicional fora deste if para carregar menu
+            dic = sav.read_json('menu', predefinição_menu)
+            janela3['nome1'].update(dic['nome1'])
+            janela3['nome2'].update(dic['nome2'])
+            janela3['valor1'].update(dic['valor1'])
+            janela3['valor2'].update(dic['valor2'])
+            janela3['taxa'].update(dic['taxa'])
+            sg.popup('Dados carregados com sucesso!', icon=icon_path)
+        except:
+            sg.popup('Não foi possível carregar os dados.', icon=icon_path)
+    # BOTÃO PÁGINA CONFIG DEL LOAD
+    if window == janela3 and event == 'del_files_menu2':
+        result = sav.del_json_pre('menu', values['option_files_menu'])
+        if result == False:
+            sg.popup('Ocorreu um erro', icon=icon_path)
+        else:
+            keys = sav.read_json_keys('menu')
+            if len(keys) == 0:
+                keys = ['Nenhum']
+            janela3['option_files_menu'].update(values=keys, value=keys[0])
+            sg.popup('Dados excluidos com sucesso!', icon=icon_path)
     
     # COMANDOS JANELA MAIN
     if window == janela1 and event == 'start':
