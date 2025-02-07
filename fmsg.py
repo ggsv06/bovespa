@@ -9,7 +9,7 @@ def enviar_email(key, remetente, destinatario, taxa, nome1, nome2):
     <p>Obrigado por utilizar este software de Gian Gabriel</p>
     """
     msg = email.message.Message()
-    msg['Subject'] = "🚨 ALERTA! A TAXA FOI ATINGIDA 🚨"
+    msg['Subject'] = "🚨 ALERTA! A META FOI ATINGIDA 🚨"
     msg['From'] = remetente
     msg['To'] = destinatario
     password = key 

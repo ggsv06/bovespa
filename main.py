@@ -17,6 +17,7 @@ running = False
 start_time = None
 meta = False
 temp = False
+finish_time = 0
 # try:
     # predefinição = sav.read_json_keys('config')[0]
 # except:
@@ -209,39 +210,42 @@ while True:
         janela1['cancel_main'].update(button_color=('white', 'grey'))
         janela1['start'].update(button_color=('black', '#3de226'))
         janela1['status'].update('--- Desativado ---', text_color='red')
+        janela1['output'].update(text_color='black')
 
     # A cada 60 segundos o cálculo é realizado
     if running:
         inst_time = time.time()
         if inst_time - start_time >= 2:
-            papel1 = cot.pregao_inst(nome1)
-            papel2 = cot.pregao_inst(nome2)
-            taxa_inicial = cot.taxa(valor1, valor2)
-            taxa_inst = cot.taxa(papel1, papel2)
-            janela1['output'].update(f"\n{time.strftime('%d/%m/%Y %H:%M:%S')}", append=True)
-            janela1['output'].update(f"\n{nome1}: {papel1:.2f}\n{nome2}: {papel2:.2f}\nTaxa: {taxa_inst-taxa_inicial:.3%}\n\n", append=True)
-            # Condicional de parada
-            if taxa >= 0:
-                if taxa_inst >= taxa_inicial + taxa:
-                    meta = True
+            if inst_time - finish_time >= 1800 or inst_time - finish_time == inst_time:
+                papel1 = cot.pregao_inst(nome1)
+                papel2 = cot.pregao_inst(nome2)
+                taxa_inicial = cot.taxa(valor1, valor2)
+                taxa_inst = cot.taxa(papel1, papel2)
+                janela1['output'].update(f"\n{time.strftime('%d/%m/%Y %H:%M:%S')}", append=True)
+                janela1['output'].update(f"\n{nome1}: {papel1:.2f}\n{nome2}: {papel2:.2f}\nTaxa: {taxa_inst-taxa_inicial:.3%}\n\n", append=True)
+                # Condicional de parada
+                if taxa >= 0:
+                    if taxa_inst >= taxa_inicial + taxa:
+                        meta = True
+                    else:
+                        meta = False
+                        pass
                 else:
-                    meta = False
-                    pass
-            else:
-                if taxa_inst <= taxa_inicial + taxa:
-                    meta = True
-                else:
-                    meta = False
-                    pass
-            start_time = time.time()
+                    if taxa_inst <= taxa_inicial + taxa:
+                        meta = True
+                    else:
+                        meta = False
+                        pass
+                start_time = time.time()
         # Disparar email
         if meta:
             meta = False
-            running = False
-            janela1['cancel_main'].update(button_color=('white', 'gray'))
-            janela1['start'].update(button_color=('black', '#3de226'))
-            janela1['status'].update('--- Desativado ---', text_color='red')
-            janela1['output'].update('Meta atingida com sucesso!\n', append=True)
+            running = True
+            finish_time = time.time()
+            # janela1['cancel_main'].update(button_color=('white', 'gray'))
+            # janela1['start'].update(button_color=('black', '#3de226'))
+            # janela1['status'].update('--- Desativado ---', text_color='red')
+            janela1['output'].update('META ATINGIDA COM SUCESSO!\n', text_color='green', append=True)
             try:
                 dic_conf = sav.read_json('config', predefinição)
             except:
@@ -254,4 +258,4 @@ while True:
                     mil.enviar_email(dic_conf['token'], dic_conf['remetente'], dic_conf['email'], taxa, nome1, nome2)
             except Exception as e:
                 janela1['output'].update('Email não pode ser enviado.\n')
-            sg.popup('Meta Atingida com sucesso!', icon=icon_path)
+            # sg.popup('Meta Atingida com sucesso!', icon=icon_path)

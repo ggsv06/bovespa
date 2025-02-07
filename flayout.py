@@ -9,13 +9,13 @@ def janela_main(icon_path):
         [sg.Text('Preços             '), sg.InputText(key='valor1', size=(int(WIN_W/2),1)), sg.InputText(key='valor2', size=(int(WIN_W/2),1))],
         [sg.Text('Meta %            '), sg.InputText(key='taxa', size=(int(WIN_W/2),1))],
         [sg.Push(), sg.Text('--- Desativado ---', key='status', text_color='red'), sg.Push()],
-        [sg.Text('Email      '), sg.Text('Nenhum', key='status_email', text_color='red'), sg.Push()],
-        [sg.Text('Estratégia'), sg.Text('Nenhum', key='status_ativos', text_color='red'), sg.Push()],
+        [sg.Text('Destinatário'), sg.Text('Nenhum', key='status_email', text_color='red'), sg.Push()],
+        [sg.Text('Estratégia   '), sg.Text('Nenhum', key='status_ativos', text_color='red'), sg.Push()],
         [sg.Multiline(size=(50,10), key='output', disabled=True, autoscroll=True)],
         [sg.Text('')],
         [sg.Button('Configurações', key='config'), sg.Button('Estratégia', key='files_main'), sg.Button('Cancelar', key='cancel_main', button_color=('white', 'grey')), sg.Button('Iniciar', key='start', button_color=('black', '#3de226'))]
     ]
-    return sg.Window('Alarme de cotações da BOVESPA',layout_main, finalize=True, icon=icon_path)
+    return sg.Window('Estratégia Long/Short',layout_main, finalize=True, icon=icon_path)
 # nome1, nome2 
 # valor1, valor2 
 # taxa 
@@ -28,7 +28,7 @@ def janela_config(icon_path):
     WIN_H = 20
     sg.theme('GrayGrayGray')
     layout_emails = [
-        [sg.Text('Nome da predefinição'), sg.InputText(key='nome_pre', size=(int(WIN_W),1))],
+        [sg.Text('Nome do destinatário'), sg.InputText(key='nome_pre', size=(int(WIN_W),1))],
         [sg.Text('Email destinatário     '), sg.InputText(key='email',size=(int(WIN_W),1))],
         [sg.Text('Email remetente       '), sg.InputText(key='remetente',size=(int(WIN_W),1))],
         [sg.Text('Senha remetente      '), sg.InputText(key='token',size=(int(WIN_W),1))],
