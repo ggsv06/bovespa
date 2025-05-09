@@ -1,4 +1,4 @@
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 import base64
 
 """
@@ -19,11 +19,11 @@ import base64
     Input: a single image file
     Output: clipboard will contain the Base64 Byte String of the source image
     
-    Copyright 2021-2023 PySimpleSoft, Inc. and/or its licensors. All rights reserved.
+    Copyright 2021-2023 FreeSimpleSoft, Inc. and/or its licensors. All rights reserved.
     
-    Redistribution, modification, or any other use of PySimpleGUI or any portion thereof is subject to the terms of the PySimpleGUI License Agreement available at https://eula.pysimplegui.com.
+    Redistribution, modification, or any other use of FreeSimpleGUI or any portion thereof is subject to the terms of the FreeSimpleGUI License Agreement available at https://eula.pysimplegui.com.
     
-    You may not redistribute, modify or otherwise use PySimpleGUI or its contents except pursuant to the PySimpleGUI License Agreement.
+    You may not redistribute, modify or otherwise use FreeSimpleGUI or its contents except pursuant to the FreeSimpleGUI License Agreement.
 """
 
 

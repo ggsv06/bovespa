@@ -1,4 +1,4 @@
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 
 def janela_main(icon_path):
     WIN_W = 30
